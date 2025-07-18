@@ -1111,8 +1111,8 @@
                         });
                         
                         doc.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight);
-                        doc.save(`PDF_GinnaFit_Assessment_${clientName}_${date}.pdf`);
-                        showMessage(`PDF saved successfully as PDF_GinnaFit_Assessment_${clientName}_${date}.pdf`);
+                        doc.save(`${clientName}_${date}_assessment.pdf`);
+                        showMessage(`PDF saved successfully as ${clientName}_${date}_assessment.pdf`);
                     } else {
                         // Standard paginated PDF
                         const doc = new jsPDF();
@@ -1132,8 +1132,8 @@
                             heightLeft -= pageHeight;
                         }
                         
-                        doc.save(`GinnaFit_Assessment_${clientName}_${date}.pdf`);
-                        showMessage(`PDF saved successfully as GinnaFit_Assessment_${clientName}_${date}.pdf`);
+                        doc.save(`${clientName}_${date}_assessment.pdf`);
+                        showMessage(`PDF saved successfully as ${clientName}_${date}_assessment.pdf`);
                     }
                 } catch (error) {
                     console.error('PDF export error:', error);
@@ -1176,10 +1176,10 @@
             
             const link = document.createElement('a');
             link.href = URL.createObjectURL(dataBlob);
-            link.download = `DATA_GinnaFit_Assessment_${clientName}_${date}.json`;
+            link.download = `${clientName}_${date}_assessment.json`;
             link.click();
             
-            showMessage(`Form data saved as GinnaFit_Assessment_${clientName}_${date}.json`);
+            showMessage(`Form data saved as ${clientName}_${date}_assessment.json`);
         }
         
         // Load form data from JSON
