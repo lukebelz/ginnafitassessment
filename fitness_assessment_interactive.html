@@ -399,6 +399,29 @@
             box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4);
         }
         
+        .btn-clear {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            display: inline-block;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-appearance: none;
+            line-height: normal;
+        }
+        
+        .btn-clear:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+        }
+        
         .btn-primary:active {
             transform: translateY(0);
         }
@@ -531,7 +554,7 @@
             <p><strong>Procedure:</strong> Step up and down for 3 minutes at 96 bpm (24 steps/min)</p>
             <div class="form-group-inline">
                 <label>Recovery Heart Rate (1 min post):</label>
-                <input type="number" id="cardio-heart-rate" /> <span>bpm</span>
+                <input type="number" id="cardio-heart-rate" onchange="updateCardioScore()" /> <span>bpm</span>
             </div>
             <div class="form-group-inline">
                 <label>Score (1-10):</label>
@@ -799,6 +822,7 @@
                 Load Data
                 <input type="file" accept=".json" onchange="loadFormData(this.files[0])" style="display: none;">
             </label>
+            <button class="btn btn-clear" onclick="clearFormData()">Clear Data</button>
         </div>
     </div>
     
@@ -1052,6 +1076,66 @@
             setTimeout(() => {
                 exportToPDF(true);
             }, 500);
+        }
+        
+        // Update cardiovascular score based on recovery heart rate
+        function updateCardioScore() {
+            const heartRate = parseInt(document.getElementById('cardio-heart-rate').value) || 0;
+            let score = 0;
+            
+            // Scoring based on recovery heart rate (lower is better)
+            if (heartRate > 0) {
+                if (heartRate <= 70) score = 10;
+                else if (heartRate <= 75) score = 9;
+                else if (heartRate <= 80) score = 8;
+                else if (heartRate <= 85) score = 7;
+                else if (heartRate <= 90) score = 6;
+                else if (heartRate <= 95) score = 5;
+                else if (heartRate <= 100) score = 4;
+                else if (heartRate <= 105) score = 3;
+                else if (heartRate <= 110) score = 2;
+                else score = 1;
+            }
+            
+            // Update the score field
+            document.getElementById('cardio-score').value = score;
+            
+            // Update the total calculation
+            calculateTotal();
+        }
+        
+        // Clear form data with confirmation
+        function clearFormData() {
+            const confirmDialog = confirm("Are you sure you want to clear all form data? This cannot be undone.");
+            
+            if (confirmDialog) {
+                // Clear all input fields
+                document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], select, textarea').forEach(element => {
+                    if (element.tagName === 'SELECT') {
+                        element.selectedIndex = 0;
+                    } else {
+                        element.value = '';
+                    }
+                });
+                
+                // Clear all radio buttons
+                document.querySelectorAll('input[type="radio"]').forEach(element => {
+                    element.checked = false;
+                });
+                
+                // Clear all checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(element => {
+                    element.checked = false;
+                });
+                
+                // Reset the date to today
+                document.getElementById('assessment-date').value = new Date().toLocaleDateString();
+                
+                // Update the summary
+                calculateTotal();
+                
+                showMessage('Form data cleared successfully!');
+            }
         }
     </script>
 </body>
