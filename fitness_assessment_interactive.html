@@ -448,6 +448,185 @@
             }
         }
         
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 0;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            z-index: 10;
+        }
+        
+        .modal-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #222222;
+            margin: 0;
+            padding-right: 40px;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .modal-close:hover {
+            background: #e5e5e5;
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .modal-body h3 {
+            color: #f97316;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .modal-body h3:first-child {
+            margin-top: 0;
+        }
+        
+        .modal-body p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        
+        .modal-body ul {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+        
+        .modal-body li {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+        
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+        
+        .modal-table th,
+        .modal-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .modal-table th {
+            background-color: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .modal-table tr:hover {
+            background-color: #f7fafc;
+        }
+        
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #f97316;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            vertical-align: middle;
+        }
+        
+        .info-icon:hover {
+            background: #ea580c;
+            transform: scale(1.1);
+        }
+        
+        h2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .section-title {
+            flex: 1;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
         @media print {
             body {
                 background-color: white;
@@ -548,7 +727,7 @@
         </div>
         
         <div class="assessment-section">
-            <h2>1. Cardiovascular Endurance</h2>
+            <h2><span class="section-title">1. Cardiovascular Endurance</span><span class="info-icon" onclick="showModal('cardio')">?</span></h2>
             <h3>3-Minute Step Test</h3>
             <p><strong>Equipment:</strong> 12-inch step/bench, timer, metronome (96 bpm)</p>
             <p><strong>Procedure:</strong> Step up and down for 3 minutes at 96 bpm (24 steps/min)</p>
@@ -578,7 +757,7 @@
         </div>
         
         <div class="assessment-section">
-            <h2>2. Push Assessment (Upper Body Pushing Strength)</h2>
+            <h2><span class="section-title">2. Push Assessment (Upper Body Pushing Strength)</span><span class="info-icon" onclick="showModal('push')">?</span></h2>
             <h3>Push-Up Test (60 seconds)</h3>
             <div class="form-group-inline">
                 <label>Modification:</label>
@@ -623,7 +802,7 @@
         </div>
         
         <div class="assessment-section">
-            <h2>3. Pull Assessment (Upper Body Pulling Strength)</h2>
+            <h2><span class="section-title">3. Pull Assessment (Upper Body Pulling Strength)</span><span class="info-icon" onclick="showModal('pull')">?</span></h2>
             <h3>Pull-Up/Assisted Pull-Up</h3>
             <div class="form-group-inline">
                 <label>Assistance needed:</label>
@@ -655,7 +834,7 @@
         </div>
         
         <div class="assessment-section">
-            <h2>4. Squat Assessment (Lower Body Strength & Mobility)</h2>
+            <h2><span class="section-title">4. Squat Assessment (Lower Body Strength & Mobility)</span><span class="info-icon" onclick="showModal('squat')">?</span></h2>
             <h3>Bodyweight Squat Test (60 seconds)</h3>
             <div class="form-group-inline">
                 <label>Repetitions:</label>
@@ -691,7 +870,7 @@
         </div>
         
         <div class="assessment-section">
-            <h2>5. Hinge Assessment (Posterior Chain)</h2>
+            <h2><span class="section-title">5. Hinge Assessment (Posterior Chain)</span><span class="info-icon" onclick="showModal('hinge')">?</span></h2>
             <h3>Hip Hinge Pattern</h3>
             <div class="form-group-inline">
                 <label>Can touch toes:</label>
@@ -726,7 +905,7 @@
         </div>
         
         <div class="assessment-section">
-            <h2>6. Balance Assessment</h2>
+            <h2><span class="section-title">6. Balance Assessment</span><span class="info-icon" onclick="showModal('balance')">?</span></h2>
             <h3>Single-Leg Stand Test</h3>
             <div class="form-group-inline">
                 <label>Eyes Open:</label>
@@ -1137,6 +1316,390 @@
                 showMessage('Form data cleared successfully!');
             }
         }
+        
+        // Modal Functions
+        function showModal(section) {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            // Set title based on section
+            const titles = {
+                'cardio': 'Cardiovascular Endurance Assessment',
+                'push': 'Push Assessment Information',
+                'pull': 'Pull Assessment Information',
+                'squat': 'Squat Assessment Information',
+                'hinge': 'Hinge Assessment Information',
+                'balance': 'Balance Assessment Information'
+            };
+            
+            title.textContent = titles[section] || 'Assessment Information';
+            body.innerHTML = getModalContent(section);
+            
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('modalOverlay');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        function getModalContent(section) {
+            const content = {
+                'cardio': `
+                    <h3>About the 3-Minute Step Test</h3>
+                    <p>The YMCA 3-Minute Step Test is a widely recognized submaximal test for assessing cardiovascular fitness. It measures how quickly your heart rate recovers after moderate exercise.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Step height: 12 inches (30 cm)</li>
+                        <li>Stepping rate: 96 beats per minute (24 steps/minute)</li>
+                        <li>Duration: 3 minutes</li>
+                        <li>Pattern: Up-up-down-down</li>
+                        <li>Recovery measurement: 1 minute post-exercise heart rate</li>
+                    </ul>
+                    
+                    <h3>Scoring Standards</h3>
+                    <p>The scoring is based on YMCA normative data for different age groups:</p>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Recovery HR</th>
+                            <th>Fitness Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>&lt;70 bpm</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>70-85 bpm</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>86-100 bpm</td>
+                            <td>Above Average to Average</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>101-115 bpm</td>
+                            <td>Below Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>&gt;115 bpm</td>
+                            <td>Poor</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Scientific Validation</h3>
+                    <p>Research shows a significant correlation (r = 0.80, p < 0.0001) between VO2max predicted from the YMCA 3-minute step test and actual VO2max measurements.</p>
+                    
+                    <h3>Sources</h3>
+                    <ul>
+                        <li>NASM Essentials of Personal Fitness Training</li>
+                        <li>ACE Personal Trainer Manual</li>
+                        <li>NSCA's Essentials of Personal Training</li>
+                        <li>ISSA's Foundations and Applications for a Certified Personal Trainer</li>
+                    </ul>
+                `,
+                'push': `
+                    <h3>About the Push-Up Assessment</h3>
+                    <p>The push-up test evaluates upper body pushing strength and muscular endurance, particularly of the chest, shoulders, and triceps.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Duration: 60 seconds (maximum repetitions)</li>
+                        <li>Standard position: Hands shoulder-width apart, body straight from head to heels</li>
+                        <li>Full range of motion: Chest to within 2 inches of floor, arms fully extended at top</li>
+                        <li>Modifications available for different fitness levels</li>
+                    </ul>
+                    
+                    <h3>Modification Options</h3>
+                    <ul>
+                        <li><strong>Standard:</strong> Traditional push-up position</li>
+                        <li><strong>Knee:</strong> Modified position with knees on ground</li>
+                        <li><strong>Incline:</strong> Hands elevated on bench or step</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines (Standard Push-Ups)</h3>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Repetitions</th>
+                            <th>Performance Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>&gt;50</td>
+                            <td>Elite</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>40-49</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>30-39</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>20-29</td>
+                            <td>Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>&lt;20</td>
+                            <td>Below Average</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Form Quality Matters</h3>
+                    <p>Proper form is essential for accurate assessment and injury prevention. Quality over quantity ensures valid results.</p>
+                    
+                    <h3>Sources</h3>
+                    <ul>
+                        <li>ACSM's Guidelines for Exercise Testing and Prescription</li>
+                        <li>NSCA Performance Testing Manual</li>
+                        <li>Cooper Institute Fitness Standards</li>
+                    </ul>
+                `,
+                'pull': `
+                    <h3>About the Pull-Up Assessment</h3>
+                    <p>The pull-up test measures upper body pulling strength, particularly of the back, biceps, and grip strength.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Grip: Overhand, slightly wider than shoulder-width</li>
+                        <li>Starting position: Arms fully extended, body hanging</li>
+                        <li>Full ROM: Chin above bar, return to full extension</li>
+                        <li>Assistance can be used and recorded</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines</h3>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Performance</th>
+                            <th>Strength Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>&gt;15 unassisted</td>
+                            <td>Elite</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>10-14 unassisted</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>5-9 unassisted</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>1-4 unassisted</td>
+                            <td>Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>Assisted only</td>
+                            <td>Developing</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Assistance Interpretation</h3>
+                    <p>If assistance is needed, record the amount of weight assistance. Progress is measured by reducing assistance over time.</p>
+                    
+                    <h3>Sources</h3>
+                    <ul>
+                        <li>NSCA Strength Standards</li>
+                        <li>Marine Corps Physical Fitness Standards</li>
+                        <li>ExRx.net Strength Standards</li>
+                    </ul>
+                `,
+                'squat': `
+                    <h3>About the Squat Assessment</h3>
+                    <p>The bodyweight squat test evaluates lower body strength, endurance, and mobility of the hips, knees, and ankles.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Duration: 60 seconds (maximum repetitions)</li>
+                        <li>Feet shoulder-width apart</li>
+                        <li>Full ROM: Hips below parallel, return to standing</li>
+                        <li>Arms can be extended forward for balance</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines</h3>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Repetitions</th>
+                            <th>Performance Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>&gt;60</td>
+                            <td>Elite</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>50-59</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>40-49</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>30-39</td>
+                            <td>Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>&lt;30</td>
+                            <td>Below Average</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Mobility Considerations</h3>
+                    <p>Limited ankle or hip mobility may affect squat depth. Note any compensations or limitations observed.</p>
+                    
+                    <h3>Sources</h3>
+                    <ul>
+                        <li>NASM Movement Assessment Guidelines</li>
+                        <li>FMS (Functional Movement Screen) Standards</li>
+                        <li>ACSM Exercise Testing Guidelines</li>
+                    </ul>
+                `,
+                'hinge': `
+                    <h3>About the Hinge Assessment</h3>
+                    <p>The hip hinge assessment evaluates posterior chain flexibility, particularly hamstring mobility and lower back health.</p>
+                    
+                    <h3>Test Components</h3>
+                    <ul>
+                        <li><strong>Toe Touch Test:</strong> Standing forward bend flexibility</li>
+                        <li><strong>Hip Hinge Pattern:</strong> Ability to hinge at hips without excessive spinal flexion</li>
+                        <li><strong>Lower Back Assessment:</strong> Checking for excessive rounding</li>
+                    </ul>
+                    
+                    <h3>Scoring Criteria</h3>
+                    <ul>
+                        <li><strong>10:</strong> Palms flat on floor, perfect hip hinge</li>
+                        <li><strong>8-9:</strong> Fingertips to floor easily</li>
+                        <li><strong>6-7:</strong> Fingertips reach ankles</li>
+                        <li><strong>4-5:</strong> Fingertips reach mid-shin</li>
+                        <li><strong>1-3:</strong> Limited flexibility, cannot reach shins</li>
+                    </ul>
+                    
+                    <h3>Clinical Significance</h3>
+                    <p>Poor hip hinge patterns are associated with increased risk of lower back injury. This assessment helps identify mobility restrictions and movement quality issues.</p>
+                    
+                    <h3>Sources</h3>
+                    <ul>
+                        <li>Stuart McGill - Back Mechanic</li>
+                        <li>FMS Movement Patterns</li>
+                        <li>NASM Corrective Exercise Specialist Manual</li>
+                    </ul>
+                `,
+                'balance': `
+                    <h3>About the Balance Assessment</h3>
+                    <p>The single-leg stand test evaluates proprioception, stability, and neuromuscular control.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Stand on one leg with eyes open (30 seconds)</li>
+                        <li>Stand on one leg with eyes closed (30 seconds)</li>
+                        <li>Test both legs</li>
+                        <li>Arms can be crossed over chest or at sides</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines</h3>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Performance</th>
+                            <th>Balance Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>30s eyes closed, no wobble</td>
+                            <td>Elite</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>20-29s eyes closed</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>10-19s eyes closed</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>&lt;10s eyes closed, 30s eyes open</td>
+                            <td>Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>Difficulty with eyes open</td>
+                            <td>Needs Improvement</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Age Considerations</h3>
+                    <p>Balance naturally declines with age. Norms vary by age group, with expectations adjusted accordingly.</p>
+                    
+                    <h3>Sources</h3>
+                    <ul>
+                        <li>Berg Balance Scale Research</li>
+                        <li>CDC Balance Assessment Guidelines</li>
+                        <li>Journal of Aging and Physical Activity</li>
+                    </ul>
+                `
+            };
+            
+            return content[section] || '<p>Information not available for this section.</p>';
+        }
     </script>
+    
+    <!-- Modal Structure -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Assessment Information</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
 </body>
 </html>
