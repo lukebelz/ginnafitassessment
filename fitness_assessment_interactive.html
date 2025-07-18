@@ -611,6 +611,85 @@
             flex: 1;
         }
         
+        .assessment-type-selector {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .assessment-type-selector label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .assessment-type-selector input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .assessment-type-selector input[type="radio"]:checked + span {
+            color: #f97316;
+            font-weight: 600;
+        }
+        
+        .pull-test-section {
+            transition: opacity 0.3s ease;
+        }
+        
+        .segmented-control {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        
+        .segmented-control-group {
+            display: inline-flex;
+            background: #e2e8f0;
+            border-radius: 12px;
+            padding: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .segmented-control-button {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .segmented-control-button:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .segmented-control-button:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .segmented-control-button:hover:not(.active) {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+        
+        .segmented-control-button.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -694,7 +773,7 @@
                         <select id="client-weight">
                             <option value="">Select</option>
                             <script>
-                                for(let i = 80; i <= 400; i += 5) {
+                                for(let i = 80; i <= 400; i += 1) {
                                     document.write('<option value="' + i + '">' + i + ' lbs</option>');
                                 }
                             </script>
@@ -762,22 +841,22 @@
             <div class="form-group-inline">
                 <label>Modification:</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="pushup-mod" value="standard" /> Standard</label>
-                    <label><input type="radio" name="pushup-mod" value="knee" /> Knee</label>
-                    <label><input type="radio" name="pushup-mod" value="incline" /> Incline</label>
+                    <label><input type="radio" name="pushup-mod" value="standard" onchange="updatePushScore()" /> Standard</label>
+                    <label><input type="radio" name="pushup-mod" value="knee" onchange="updatePushScore()" /> Knee</label>
+                    <label><input type="radio" name="pushup-mod" value="incline" onchange="updatePushScore()" /> Incline</label>
                 </div>
             </div>
             <div class="form-group-inline">
                 <label>Repetitions completed:</label>
-                <input type="number" id="pushup-reps" />
+                <input type="number" id="pushup-reps" onchange="updatePushScore()" />
             </div>
             <div class="form-group-inline">
                 <label>Form quality:</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="pushup-form" value="excellent" /> Excellent</label>
-                    <label><input type="radio" name="pushup-form" value="good" /> Good</label>
-                    <label><input type="radio" name="pushup-form" value="fair" /> Fair</label>
-                    <label><input type="radio" name="pushup-form" value="poor" /> Poor</label>
+                    <label><input type="radio" name="pushup-form" value="excellent" onchange="updatePushScore()" /> Excellent</label>
+                    <label><input type="radio" name="pushup-form" value="good" onchange="updatePushScore()" /> Good</label>
+                    <label><input type="radio" name="pushup-form" value="fair" onchange="updatePushScore()" /> Fair</label>
+                    <label><input type="radio" name="pushup-form" value="poor" onchange="updatePushScore()" /> Poor</label>
                 </div>
             </div>
             <div class="form-group-inline">
@@ -803,15 +882,83 @@
         
         <div class="assessment-section">
             <h2><span class="section-title">3. Pull Assessment (Upper Body Pulling Strength)</span><span class="info-icon" onclick="showModal('pull')">?</span></h2>
-            <h3>Pull-Up/Assisted Pull-Up</h3>
-            <div class="form-group-inline">
-                <label>Assistance needed:</label>
-                <input type="number" id="pullup-assistance" /> <span>lbs</span>
+            
+            <div class="segmented-control">
+                <div class="segmented-control-group">
+                    <button type="button" class="segmented-control-button active" data-test-type="pullup" onclick="switchPullTest('pullup')">
+                        Pull-Up Test
+                    </button>
+                    <button type="button" class="segmented-control-button" data-test-type="inverted-row" onclick="switchPullTest('inverted-row')">
+                        Inverted Row
+                    </button>
+                    <button type="button" class="segmented-control-button" data-test-type="dead-hang" onclick="switchPullTest('dead-hang')">
+                        Dead Hang
+                    </button>
+                </div>
             </div>
-            <div class="form-group-inline">
-                <label>Repetitions completed:</label>
-                <input type="number" id="pullup-reps" />
+            
+            <!-- Hidden radio inputs for data persistence -->
+            <div style="display: none;">
+                <input type="radio" name="pull-test-type" value="pullup" checked>
+                <input type="radio" name="pull-test-type" value="inverted-row">
+                <input type="radio" name="pull-test-type" value="dead-hang">
             </div>
+            
+            <!-- Pull-Up Test Section -->
+            <div id="pullup-test-section" class="pull-test-section">
+                <h3>Pull-Up/Assisted Pull-Up</h3>
+                <div class="form-group-inline">
+                    <label>Assistance needed:</label>
+                    <input type="number" id="pullup-assistance" onchange="updatePullScore()" /> <span>lbs</span>
+                </div>
+                <div class="form-group-inline">
+                    <label>Repetitions completed:</label>
+                    <input type="number" id="pullup-reps" onchange="updatePullScore()" />
+                </div>
+                <div class="scoring-guide">
+                    <strong>Pull-Up Scoring:</strong> 10: &gt;15 unassisted | 8-9: 10-14 | 6-7: 5-9 | 4-5: 1-4 | 1-3: Assisted only
+                </div>
+            </div>
+            
+            <!-- Inverted Row Test Section -->
+            <div id="inverted-row-test-section" class="pull-test-section" style="display:none;">
+                <h3>Inverted Row (60 seconds)</h3>
+                <div class="form-group-inline">
+                    <label>Body Position:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="inverted-position" value="feet-elevated" onchange="updatePullScore()"> Feet Elevated</label>
+                        <label><input type="radio" name="inverted-position" value="feet-ground" onchange="updatePullScore()"> Feet on Ground</label>
+                        <label><input type="radio" name="inverted-position" value="knees-bent" onchange="updatePullScore()"> Knees Bent</label>
+                    </div>
+                </div>
+                <div class="form-group-inline">
+                    <label>Repetitions (60 sec):</label>
+                    <input type="number" id="inverted-row-reps" onchange="updatePullScore()" />
+                </div>
+                <div class="scoring-guide">
+                    <strong>Inverted Row Scoring:</strong> Base: &gt;50 = 10, 40-49 = 8-9, 30-39 = 6-7, 20-29 = 4-5, &lt;20 = 1-3 | Adjust: Feet ground -2, Knees bent -3
+                </div>
+            </div>
+            
+            <!-- Dead Hang Test Section -->
+            <div id="dead-hang-test-section" class="pull-test-section" style="display:none;">
+                <h3>Dead Hang Test</h3>
+                <div class="form-group-inline">
+                    <label>Hang Time:</label>
+                    <input type="number" id="dead-hang-time" onchange="updatePullScore()" /> <span>seconds</span>
+                </div>
+                <div class="form-group-inline">
+                    <label>Grip Type:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="dead-hang-grip" value="overhand" checked onchange="updatePullScore()"> Overhand</label>
+                        <label><input type="radio" name="dead-hang-grip" value="neutral" onchange="updatePullScore()"> Neutral</label>
+                    </div>
+                </div>
+                <div class="scoring-guide">
+                    <strong>Dead Hang Scoring:</strong> 10: ≥90s | 8-9: 75-89s | 6-7: 60-74s | 5: 45-59s | 4: 30-44s | 3: 20-29s | 2: 10-19s | 1: &lt;10s | Neutral grip -2 points
+                </div>
+            </div>
+            
             <div class="form-group-inline">
                 <label>Score (1-10):</label>
                 <select class="score-select" id="pull-score" onchange="calculateTotal()">
@@ -828,9 +975,6 @@
                     <option value="10">10</option>
                 </select>
             </div>
-            <div class="scoring-guide">
-                <strong>Pull-Up Scoring:</strong> 10: &gt;15 unassisted | 8-9: 10-14 | 6-7: 5-9 | 4-5: 1-4 | 1-3: Assisted only
-            </div>
         </div>
         
         <div class="assessment-section">
@@ -838,14 +982,14 @@
             <h3>Bodyweight Squat Test (60 seconds)</h3>
             <div class="form-group-inline">
                 <label>Repetitions:</label>
-                <input type="number" id="squat-reps" />
+                <input type="number" id="squat-reps" onchange="updateSquatScore()" />
             </div>
             <div class="form-group-inline">
                 <label>Depth achieved:</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="squat-depth" value="below-parallel" /> Below parallel</label>
-                    <label><input type="radio" name="squat-depth" value="parallel" /> Parallel</label>
-                    <label><input type="radio" name="squat-depth" value="above-parallel" /> Above parallel</label>
+                    <label><input type="radio" name="squat-depth" value="below-parallel" onchange="updateSquatScore()" /> Below parallel</label>
+                    <label><input type="radio" name="squat-depth" value="parallel" onchange="updateSquatScore()" /> Parallel</label>
+                    <label><input type="radio" name="squat-depth" value="above-parallel" onchange="updateSquatScore()" /> Above parallel</label>
                 </div>
             </div>
             <div class="form-group-inline">
@@ -873,17 +1017,20 @@
             <h2><span class="section-title">5. Hinge Assessment (Posterior Chain)</span><span class="info-icon" onclick="showModal('hinge')">?</span></h2>
             <h3>Hip Hinge Pattern</h3>
             <div class="form-group-inline">
-                <label>Can touch toes:</label>
+                <label>Reach distance:</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="touch-toes" value="yes" /> Yes</label>
-                    <label><input type="radio" name="touch-toes" value="no" /> No</label>
+                    <label><input type="radio" name="hinge-reach" value="palms-floor" onchange="updateHingeScore()" /> Palms on floor</label>
+                    <label><input type="radio" name="hinge-reach" value="fingertips-floor" onchange="updateHingeScore()" /> Fingertips to floor</label>
+                    <label><input type="radio" name="hinge-reach" value="fingertips-ankles" onchange="updateHingeScore()" /> To ankles</label>
+                    <label><input type="radio" name="hinge-reach" value="fingertips-shin" onchange="updateHingeScore()" /> To mid-shin</label>
+                    <label><input type="radio" name="hinge-reach" value="cannot-reach-shin" onchange="updateHingeScore()" /> Cannot reach shins</label>
                 </div>
             </div>
             <div class="form-group-inline">
                 <label>Lower back rounding:</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="back-rounding" value="yes" /> Yes</label>
-                    <label><input type="radio" name="back-rounding" value="no" /> No</label>
+                    <label><input type="radio" name="back-rounding" value="yes" onchange="updateHingeScore()" /> Yes</label>
+                    <label><input type="radio" name="back-rounding" value="no" onchange="updateHingeScore()" /> No</label>
                 </div>
             </div>
             <div class="form-group-inline">
@@ -902,6 +1049,9 @@
                     <option value="10">10</option>
                 </select>
             </div>
+            <div class="scoring-guide">
+                <strong>Scoring Guide:</strong> 10: Palms on floor | 8: Fingertips to floor | 6: To ankles | 4: To mid-shin | 2: Cannot reach shins | Reduce 2 points for back rounding
+            </div>
         </div>
         
         <div class="assessment-section">
@@ -912,12 +1062,12 @@
                 <div style="display: flex; gap: 20px; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span>Right leg:</span>
-                        <input type="number" id="balance-open-right" style="width: 80px;" />
+                        <input type="number" id="balance-open-right" style="width: 80px;" onchange="updateBalanceScore()" />
                         <span>sec</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span>Left leg:</span>
-                        <input type="number" id="balance-open-left" style="width: 80px;" />
+                        <input type="number" id="balance-open-left" style="width: 80px;" onchange="updateBalanceScore()" />
                         <span>sec</span>
                     </div>
                 </div>
@@ -927,12 +1077,12 @@
                 <div style="display: flex; gap: 20px; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span>Right leg:</span>
-                        <input type="number" id="balance-closed-right" style="width: 80px;" />
+                        <input type="number" id="balance-closed-right" style="width: 80px;" onchange="updateBalanceScore()" />
                         <span>sec</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span>Left leg:</span>
-                        <input type="number" id="balance-closed-left" style="width: 80px;" />
+                        <input type="number" id="balance-closed-left" style="width: 80px;" onchange="updateBalanceScore()" />
                         <span>sec</span>
                     </div>
                 </div>
@@ -952,6 +1102,9 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
+            </div>
+            <div class="scoring-guide">
+                <strong>Scoring Guide:</strong> 10: 30s eyes closed | 8-9: 20-29s eyes closed | 6-7: 10-19s eyes closed | 4-5: <10s closed, 30s open | 1-3: Difficulty with eyes open
             </div>
         </div>
         
@@ -1233,6 +1386,12 @@
                         console.log('Fields not found:', fieldsNotFound);
                     }
                     
+                    // Check if pull test type needs to be switched
+                    const pullTestType = formData['pull-test-type'];
+                    if (pullTestType && pullTestType !== 'pullup') {
+                        switchPullTest(pullTestType);
+                    }
+                    
                     // Update summary
                     calculateTotal();
                     showMessage(`Form data loaded successfully! (${fieldsUpdated} fields updated)`);
@@ -1280,6 +1439,264 @@
             document.getElementById('cardio-score').value = score;
             
             // Update the total calculation
+            calculateTotal();
+        }
+        
+        // Update push assessment score based on reps, modification, and form
+        function updatePushScore() {
+            const reps = parseInt(document.getElementById('pushup-reps').value) || 0;
+            const modification = document.querySelector('input[name="pushup-mod"]:checked')?.value || '';
+            const form = document.querySelector('input[name="pushup-form"]:checked')?.value || '';
+            
+            if (reps === 0) return;
+            
+            let score = 0;
+            
+            // Base scoring for standard push-ups
+            if (reps > 50) score = 10;
+            else if (reps >= 45) score = 9;
+            else if (reps >= 40) score = 8;
+            else if (reps >= 35) score = 7;
+            else if (reps >= 30) score = 6;
+            else if (reps >= 25) score = 5;
+            else if (reps >= 20) score = 4;
+            else if (reps >= 15) score = 3;
+            else if (reps >= 10) score = 2;
+            else score = 1;
+            
+            // Adjust for modification
+            if (modification === 'knee') {
+                score = Math.max(1, score - 2);
+            } else if (modification === 'incline') {
+                score = Math.max(1, score - 3);
+            }
+            
+            // Adjust for form quality
+            if (form === 'poor') {
+                score = Math.max(1, score - 2);
+            } else if (form === 'fair') {
+                score = Math.max(1, score - 1);
+            }
+            
+            // Update the score field
+            document.getElementById('push-score').value = score;
+            calculateTotal();
+        }
+        
+        // Update pull assessment score based on selected test type
+        function updatePullScore() {
+            const testType = document.querySelector('input[name="pull-test-type"]:checked')?.value || 'pullup';
+            let score = 0;
+            
+            switch(testType) {
+                case 'pullup':
+                    const pullupReps = parseInt(document.getElementById('pullup-reps').value) || 0;
+                    const assistance = parseInt(document.getElementById('pullup-assistance').value) || 0;
+                    
+                    if (pullupReps === 0) return;
+                    
+                    // If unassisted (0 or no assistance)
+                    if (assistance === 0) {
+                        if (pullupReps > 15) score = 10;
+                        else if (pullupReps >= 12) score = 9;
+                        else if (pullupReps >= 10) score = 8;
+                        else if (pullupReps >= 7) score = 7;
+                        else if (pullupReps >= 5) score = 6;
+                        else if (pullupReps >= 3) score = 5;
+                        else if (pullupReps >= 1) score = 4;
+                    } else {
+                        // With assistance - max score of 3
+                        if (pullupReps >= 10) score = 3;
+                        else if (pullupReps >= 5) score = 2;
+                        else score = 1;
+                    }
+                    break;
+                    
+                case 'inverted-row':
+                    const invertedReps = parseInt(document.getElementById('inverted-row-reps').value) || 0;
+                    const position = document.querySelector('input[name="inverted-position"]:checked')?.value || '';
+                    
+                    if (invertedReps === 0) return;
+                    
+                    // Base scoring similar to push-ups
+                    if (invertedReps > 50) score = 10;
+                    else if (invertedReps >= 45) score = 9;
+                    else if (invertedReps >= 40) score = 8;
+                    else if (invertedReps >= 35) score = 7;
+                    else if (invertedReps >= 30) score = 6;
+                    else if (invertedReps >= 25) score = 5;
+                    else if (invertedReps >= 20) score = 4;
+                    else if (invertedReps >= 15) score = 3;
+                    else if (invertedReps >= 10) score = 2;
+                    else score = 1;
+                    
+                    // Adjust for body position
+                    if (position === 'feet-ground') {
+                        score = Math.max(1, score - 2);
+                    } else if (position === 'knees-bent') {
+                        score = Math.max(1, score - 3);
+                    }
+                    break;
+                    
+                case 'dead-hang':
+                    const hangTime = parseInt(document.getElementById('dead-hang-time').value) || 0;
+                    const gripType = document.querySelector('input[name="dead-hang-grip"]:checked')?.value || 'overhand';
+                    
+                    if (hangTime === 0) return;
+                    
+                    // Scoring based on hang time (overhand grip baseline)
+                    if (hangTime >= 90) score = 10;
+                    else if (hangTime >= 80) score = 9;
+                    else if (hangTime >= 75) score = 8;
+                    else if (hangTime >= 65) score = 7;
+                    else if (hangTime >= 60) score = 6;
+                    else if (hangTime >= 45) score = 5;
+                    else if (hangTime >= 30) score = 4;
+                    else if (hangTime >= 20) score = 3;
+                    else if (hangTime >= 10) score = 2;
+                    else score = 1;
+                    
+                    // Neutral grip is easier, reduce score by 2
+                    if (gripType === 'neutral' && score > 1) {
+                        score = Math.max(1, score - 2);
+                    }
+                    break;
+            }
+            
+            // Update the score field
+            document.getElementById('pull-score').value = score;
+            calculateTotal();
+        }
+        
+        // Switch between pull test types
+        function switchPullTest(testType) {
+            // Update button states
+            document.querySelectorAll('.segmented-control-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`[data-test-type="${testType}"]`).classList.add('active');
+            
+            // Update hidden radio for data persistence
+            document.querySelector(`input[name="pull-test-type"][value="${testType}"]`).checked = true;
+            
+            // Hide all pull test sections
+            document.querySelectorAll('.pull-test-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(testType + '-test-section');
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+            
+            // Trigger score update
+            updatePullScore();
+        }
+        
+        // Update squat assessment score based on reps and depth
+        function updateSquatScore() {
+            const reps = parseInt(document.getElementById('squat-reps').value) || 0;
+            const depth = document.querySelector('input[name="squat-depth"]:checked')?.value || '';
+            
+            if (reps === 0) return;
+            
+            let score = 0;
+            
+            // Base scoring
+            if (reps > 60) score = 10;
+            else if (reps >= 55) score = 9;
+            else if (reps >= 50) score = 8;
+            else if (reps >= 45) score = 7;
+            else if (reps >= 40) score = 6;
+            else if (reps >= 35) score = 5;
+            else if (reps >= 30) score = 4;
+            else if (reps >= 20) score = 3;
+            else if (reps >= 10) score = 2;
+            else score = 1;
+            
+            // Adjust for depth
+            if (depth === 'parallel') {
+                score = Math.max(1, score - 1);
+            } else if (depth === 'above-parallel') {
+                score = Math.max(1, score - 2);
+            }
+            
+            // Update the score field
+            document.getElementById('squat-score').value = score;
+            calculateTotal();
+        }
+        
+        // Update hinge assessment score based on reach and back rounding
+        function updateHingeScore() {
+            const reach = document.querySelector('input[name="hinge-reach"]:checked')?.value || '';
+            const backRounding = document.querySelector('input[name="back-rounding"]:checked')?.value || '';
+            
+            if (!reach) return;
+            
+            let score = 0;
+            
+            // Base scoring on reach distance
+            switch(reach) {
+                case 'palms-floor': score = 10; break;
+                case 'fingertips-floor': score = 8; break;
+                case 'fingertips-ankles': score = 6; break;
+                case 'fingertips-shin': score = 4; break;
+                case 'cannot-reach-shin': score = 2; break;
+            }
+            
+            // Reduce score if back rounds
+            if (backRounding === 'yes' && score > 0) {
+                score = Math.max(1, score - 2);
+            }
+            
+            // Update the score field
+            document.getElementById('hinge-score').value = score;
+            calculateTotal();
+        }
+        
+        // Update balance assessment score based on single-leg stand times
+        function updateBalanceScore() {
+            const openRight = parseInt(document.getElementById('balance-open-right').value) || 0;
+            const openLeft = parseInt(document.getElementById('balance-open-left').value) || 0;
+            const closedRight = parseInt(document.getElementById('balance-closed-right').value) || 0;
+            const closedLeft = parseInt(document.getElementById('balance-closed-left').value) || 0;
+            
+            // Check if any value has been entered
+            if (openRight === 0 && openLeft === 0 && closedRight === 0 && closedLeft === 0) return;
+            
+            // Use the worse leg performance (but avoid 0 if one leg has data)
+            let openTime = 0;
+            let closedTime = 0;
+            
+            if (openRight > 0 && openLeft > 0) {
+                openTime = Math.min(openRight, openLeft);
+            } else if (openRight > 0 || openLeft > 0) {
+                openTime = Math.max(openRight, openLeft);
+            }
+            
+            if (closedRight > 0 && closedLeft > 0) {
+                closedTime = Math.min(closedRight, closedLeft);
+            } else if (closedRight > 0 || closedLeft > 0) {
+                closedTime = Math.max(closedRight, closedLeft);
+            }
+            
+            let score = 0;
+            
+            // Primary scoring based on eyes closed time
+            if (closedTime >= 30) score = 10;
+            else if (closedTime >= 25) score = 9;
+            else if (closedTime >= 20) score = 8;
+            else if (closedTime >= 15) score = 7;
+            else if (closedTime >= 10) score = 6;
+            else if (closedTime >= 5) score = 5;
+            else if (openTime >= 30) score = 4;
+            else if (openTime >= 20) score = 3;
+            else if (openTime >= 10) score = 2;
+            else score = 1;
+            
+            // Update the score field
+            document.getElementById('balance-score').value = score;
             calculateTotal();
         }
         
@@ -1333,8 +1750,20 @@
                 'balance': 'Balance Assessment Information'
             };
             
-            title.textContent = titles[section] || 'Assessment Information';
-            body.innerHTML = getModalContent(section);
+            // For pull assessment, check which test type is selected
+            if (section === 'pull') {
+                const pullTestType = document.querySelector('input[name="pull-test-type"]:checked')?.value || 'pullup';
+                const pullTitles = {
+                    'pullup': 'Pull-Up Test Information',
+                    'inverted-row': 'Inverted Row Test Information',
+                    'dead-hang': 'Dead Hang Test Information'
+                };
+                title.textContent = pullTitles[pullTestType];
+                body.innerHTML = getModalContent(section, pullTestType);
+            } else {
+                title.textContent = titles[section] || 'Assessment Information';
+                body.innerHTML = getModalContent(section);
+            }
             
             // Show modal
             modal.classList.add('active');
@@ -1361,7 +1790,7 @@
             }
         });
         
-        function getModalContent(section) {
+        function getModalContent(section, pullTestType = null) {
             const content = {
                 'cardio': `
                     <h3>About the 3-Minute Step Test</h3>
@@ -1377,7 +1806,7 @@
                     </ul>
                     
                     <h3>Scoring Standards</h3>
-                    <p>The scoring is based on YMCA normative data for different age groups:</p>
+                    <p>The scoring is based on YMCA normative data recognized across major fitness certifications:</p>
                     <table class="modal-table">
                         <tr>
                             <th>Score</th>
@@ -1412,19 +1841,26 @@
                     </table>
                     
                     <h3>Scientific Validation</h3>
-                    <p>Research shows a significant correlation (r = 0.80, p < 0.0001) between VO2max predicted from the YMCA 3-minute step test and actual VO2max measurements.</p>
+                    <p>Research shows a significant correlation (r = 0.80, p < 0.0001) between VO2max predicted from the YMCA 3-minute step test and actual VO2max measurements. This test is validated as a reliable submaximal predictor of cardiovascular fitness.</p>
                     
-                    <h3>Sources</h3>
+                    <h3>Certification Sources & References</h3>
                     <ul>
-                        <li>NASM Essentials of Personal Fitness Training</li>
-                        <li>ACE Personal Trainer Manual</li>
-                        <li>NSCA's Essentials of Personal Training</li>
-                        <li>ISSA's Foundations and Applications for a Certified Personal Trainer</li>
+                        <li><strong>NASM:</strong> Chapter 6 - Fitness Assessment, Essentials of Personal Fitness Training (6th Edition)</li>
+                        <li><strong>ACE:</strong> ACE Personal Trainer Manual (5th Edition) - Chapter 8: Physiological Assessments</li>
+                        <li><strong>NSCA:</strong> Essentials of Strength Training and Conditioning (4th Edition) - Chapter 13</li>
+                        <li><strong>ACSM:</strong> ACSM's Guidelines for Exercise Testing and Prescription (11th Edition)</li>
+                    </ul>
+                    
+                    <h3>Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://www.acefitness.org/fitness-certifications/ace-answers/" target="_blank">ACE Fitness Resources</a></li>
+                        <li><a href="https://www.nsca.com/certification/cscs/" target="_blank">NSCA CSCS Certification Standards</a></li>
+                        <li>The Validity of the YMCA 3-Minute Step Test - Journal of Exercise Physiology</li>
                     </ul>
                 `,
                 'push': `
                     <h3>About the Push-Up Assessment</h3>
-                    <p>The push-up test evaluates upper body pushing strength and muscular endurance, particularly of the chest, shoulders, and triceps.</p>
+                    <p>The push-up test evaluates upper body pushing strength and muscular endurance, particularly of the chest, shoulders, and triceps. This assessment is recognized across all major fitness certifications.</p>
                     
                     <h3>Test Protocol</h3>
                     <ul>
@@ -1442,6 +1878,7 @@
                     </ul>
                     
                     <h3>Scoring Guidelines (Standard Push-Ups)</h3>
+                    <p>Based on NSCA and ACSM normative data for males aged 20-29:</p>
                     <table class="modal-table">
                         <tr>
                             <th>Score</th>
@@ -1475,19 +1912,230 @@
                         </tr>
                     </table>
                     
-                    <h3>Form Quality Matters</h3>
-                    <p>Proper form is essential for accurate assessment and injury prevention. Quality over quantity ensures valid results.</p>
+                    <h3>Form Quality & Movement Assessment</h3>
+                    <p>NASM emphasizes evaluating movement quality for muscle imbalances and compensations during the pushing assessment. Proper form is essential for accurate assessment and injury prevention.</p>
                     
-                    <h3>Sources</h3>
+                    <h3>Certification Sources & References</h3>
                     <ul>
-                        <li>ACSM's Guidelines for Exercise Testing and Prescription</li>
-                        <li>NSCA Performance Testing Manual</li>
-                        <li>Cooper Institute Fitness Standards</li>
+                        <li><strong>NSCA:</strong> Essentials of Strength Training and Conditioning (4th Edition) - Chapter 13, Table 13.11</li>
+                        <li><strong>ACSM:</strong> ACSM's Guidelines for Exercise Testing and Prescription (11th Edition) - Push-up test normative data</li>
+                        <li><strong>NASM:</strong> Chapter 6 - Movement Assessments, Pushing Assessment Protocol</li>
+                        <li><strong>ACE:</strong> ACE Personal Trainer Manual (5th Edition) - Muscular Fitness Assessments</li>
+                    </ul>
+                    
+                    <h3>Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://www.nsca.com/education/" target="_blank">NSCA Education Resources</a></li>
+                        <li><a href="https://www.acsm.org/education-resources/books" target="_blank">ACSM Guidelines</a></li>
+                        <li>Cooper Institute Fitness Standards - Adult Fitness Testing</li>
                     </ul>
                 `,
-                'pull': `
+                'pull': section === 'pull' ? getPullModalContent(pullTestType) : '',
+                'squat': `
+                    <h3>About the Squat Assessment</h3>
+                    <p>The bodyweight squat test evaluates lower body strength, endurance, and mobility of the hips, knees, and ankles. This assessment combines elements from FMS deep squat and NASM overhead squat assessments.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Duration: 60 seconds (maximum repetitions)</li>
+                        <li>Feet shoulder-width apart</li>
+                        <li>Full ROM: Hips below parallel, return to standing</li>
+                        <li>Arms can be extended forward for balance</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines</h3>
+                    <p>Based on muscular endurance norms and movement quality standards:</p>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Repetitions</th>
+                            <th>Performance Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>&gt;60</td>
+                            <td>Elite</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>50-59</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>40-49</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>30-39</td>
+                            <td>Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>&lt;30</td>
+                            <td>Below Average</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Movement Quality Assessment</h3>
+                    <p><strong>FMS Deep Squat Scoring (0-3):</strong></p>
+                    <ul>
+                        <li>3 = Performs deep squat with heels on floor, no compensations</li>
+                        <li>2 = Performs with heels elevated on board</li>
+                        <li>1 = Unable to perform pattern</li>
+                        <li>0 = Pain present</li>
+                    </ul>
+                    
+                    <h3>NASM Overhead Squat Assessment</h3>
+                    <p>Evaluates five kinetic chain checkpoints for compensations including feet, knees, lumbo-pelvic-hip complex, shoulders, and head position.</p>
+                    
+                    <h3>Certification Sources & References</h3>
+                    <ul>
+                        <li><strong>FMS:</strong> Functional Movement Screen Manual - Deep Squat Assessment</li>
+                        <li><strong>NASM:</strong> Chapter 6 - Movement Assessments, Overhead Squat Assessment (OHSA)</li>
+                        <li><strong>NSCA:</strong> Essentials of Strength Training and Conditioning - Lower body endurance testing</li>
+                        <li><strong>ACE:</strong> ACE Personal Trainer Manual - Functional Movement and Resistance Training</li>
+                    </ul>
+                    
+                    <h3>Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://www.functionalmovement.com/system/deep_squat" target="_blank">FMS Deep Squat Instructions</a></li>
+                        <li><a href="https://blog.nasm.org/certified-personal-trainer/how-to-perform-an-overhead-squat-assessment-osa" target="_blank">NASM Overhead Squat Assessment Guide</a></li>
+                        <li><a href="https://www.acefitness.org/fitness-certifications/ace-answers/" target="_blank">ACE Squat Assessment Resources</a></li>
+                    </ul>
+                `,
+                'hinge': `
+                    <h3>About the Hinge Assessment</h3>
+                    <p>The hip hinge assessment evaluates posterior chain flexibility, particularly hamstring mobility and lower back health. This movement pattern is fundamental for safe lifting mechanics.</p>
+                    
+                    <h3>Test Components</h3>
+                    <ul>
+                        <li><strong>Toe Touch Test:</strong> Standing forward bend flexibility</li>
+                        <li><strong>Hip Hinge Pattern:</strong> Ability to hinge at hips without excessive spinal flexion</li>
+                        <li><strong>Lower Back Assessment:</strong> Checking for excessive rounding</li>
+                    </ul>
+                    
+                    <h3>Scoring Criteria</h3>
+                    <p>Based on FMS Active Straight Leg Raise and clinical flexibility standards:</p>
+                    <ul>
+                        <li><strong>10:</strong> Palms flat on floor, perfect hip hinge mechanics</li>
+                        <li><strong>8-9:</strong> Fingertips to floor easily</li>
+                        <li><strong>6-7:</strong> Fingertips reach ankles</li>
+                        <li><strong>4-5:</strong> Fingertips reach mid-shin</li>
+                        <li><strong>1-3:</strong> Limited flexibility, cannot reach shins</li>
+                    </ul>
+                    
+                    <h3>FMS Active Straight Leg Raise (ASLR)</h3>
+                    <p>FMS scoring for hamstring and hip mobility:</p>
+                    <ul>
+                        <li>3 = Ankle clears mid-thigh</li>
+                        <li>2 = Ankle between knee and mid-thigh</li>
+                        <li>1 = Ankle doesn't clear knee</li>
+                        <li>0 = Pain present</li>
+                    </ul>
+                    
+                    <h3>Clinical Significance</h3>
+                    <p>Poor hip hinge patterns are associated with increased risk of lower back injury. Stuart McGill's research emphasizes maintaining neutral spine during hinge movements.</p>
+                    
+                    <h3>Certification Sources & References</h3>
+                    <ul>
+                        <li><strong>FMS:</strong> Functional Movement Screen Manual - Active Straight Leg Raise</li>
+                        <li><strong>NASM:</strong> Corrective Exercise Specialist Manual - Hip Hinge Patterns</li>
+                        <li><strong>CSCS:</strong> Movement competency and injury prevention strategies</li>
+                        <li><strong>Stuart McGill:</strong> "Back Mechanic" - Spine stability and hip hinge mechanics</li>
+                    </ul>
+                    
+                    <h3>Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://www.functionalmovement.com/system/active_straight_leg_raise" target="_blank">FMS Active Straight Leg Raise</a></li>
+                        <li><a href="https://www.backfitpro.com/" target="_blank">Stuart McGill's Back Mechanic Resources</a></li>
+                        <li><a href="https://www.nsca.com/education/articles/kinetic-select/the-hip-hinge/" target="_blank">NSCA Hip Hinge Guidelines</a></li>
+                    </ul>
+                `,
+                'balance': `
+                    <h3>About the Balance Assessment</h3>
+                    <p>The single-leg stand test evaluates proprioception, stability, and neuromuscular control. This assessment is critical for fall prevention and athletic performance.</p>
+                    
+                    <h3>Test Protocol</h3>
+                    <ul>
+                        <li>Stand on one leg with eyes open (30 seconds)</li>
+                        <li>Stand on one leg with eyes closed (30 seconds)</li>
+                        <li>Test both legs</li>
+                        <li>Arms can be crossed over chest or at sides</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines</h3>
+                    <p>Based on normative data for unipedal stance testing:</p>
+                    <table class="modal-table">
+                        <tr>
+                            <th>Score</th>
+                            <th>Performance</th>
+                            <th>Balance Level</th>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>30s eyes closed, no wobble</td>
+                            <td>Elite</td>
+                        </tr>
+                        <tr>
+                            <td>8-9</td>
+                            <td>20-29s eyes closed</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>6-7</td>
+                            <td>10-19s eyes closed</td>
+                            <td>Good</td>
+                        </tr>
+                        <tr>
+                            <td>4-5</td>
+                            <td>&lt;10s eyes closed, 30s eyes open</td>
+                            <td>Average</td>
+                        </tr>
+                        <tr>
+                            <td>1-3</td>
+                            <td>Difficulty with eyes open</td>
+                            <td>Needs Improvement</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Age-Based Normative Data</h3>
+                    <ul>
+                        <li><strong>18-30 years:</strong> Average 25-30 seconds eyes open</li>
+                        <li><strong>40-59 years:</strong> Average 20-25 seconds eyes open</li>
+                        <li><strong>60+ years:</strong> Average 10-20 seconds eyes open</li>
+                        <li><strong>Fall risk threshold:</strong> &lt;5 seconds indicates increased fall risk</li>
+                    </ul>
+                    
+                    <h3>NASM Balance Assessments</h3>
+                    <p>NASM uses single-leg balance as part of their movement assessment protocol to identify asymmetries and neuromuscular control deficits.</p>
+                    
+                    <h3>Certification Sources & References</h3>
+                    <ul>
+                        <li><strong>NASM:</strong> Chapter 6 - Movement Assessments, Single-Leg Balance Test</li>
+                        <li><strong>ACE:</strong> Balance and Core Training Guidelines</li>
+                        <li><strong>NSCA:</strong> Testing protocols for proprioception and balance</li>
+                        <li><strong>Research:</strong> "Normative Values for the Unipedal Stance Test" - Springer et al.</li>
+                    </ul>
+                    
+                    <h3>Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://www.cdc.gov/steadi/pdf/STEADI-Assessment-4Stage-508.pdf" target="_blank">CDC Balance Assessment Guidelines</a></li>
+                        <li><a href="https://www.sralab.org/rehabilitation-measures/single-leg-stance-or-one-legged-stance-test" target="_blank">Single Leg Stance Test Database</a></li>
+                        <li>Berg Balance Scale - Clinical balance assessment tool</li>
+                    </ul>
+                `
+            };
+            
+            return content[section] || '<p>Information not available for this section.</p>';
+        }
+        
+        function getPullModalContent(testType) {
+            const pullContent = {
+                'pullup': `
                     <h3>About the Pull-Up Assessment</h3>
-                    <p>The pull-up test measures upper body pulling strength, particularly of the back, biceps, and grip strength.</p>
+                    <p>The pull-up test measures upper body pulling strength, particularly of the back, biceps, and grip strength. This is a fundamental strength assessment used across military and athletic performance standards.</p>
                     
                     <h3>Test Protocol</h3>
                     <ul>
@@ -1498,6 +2146,7 @@
                     </ul>
                     
                     <h3>Scoring Guidelines</h3>
+                    <p>Based on NSCA strength standards and military fitness norms:</p>
                     <table class="modal-table">
                         <tr>
                             <th>Score</th>
@@ -1532,160 +2181,171 @@
                     </table>
                     
                     <h3>Assistance Interpretation</h3>
-                    <p>If assistance is needed, record the amount of weight assistance. Progress is measured by reducing assistance over time.</p>
+                    <p>If assistance is needed, record the amount of weight assistance. Progress is measured by reducing assistance over time. NASM recommends progressive overload to build pulling strength.</p>
                     
-                    <h3>Sources</h3>
+                    <h3>Certification Sources & References</h3>
                     <ul>
-                        <li>NSCA Strength Standards</li>
-                        <li>Marine Corps Physical Fitness Standards</li>
-                        <li>ExRx.net Strength Standards</li>
+                        <li><strong>NSCA:</strong> Essentials of Strength Training and Conditioning (4th Edition) - Chapter 13, Pull-up strength standards</li>
+                        <li><strong>CSCS:</strong> NSCA's Guide to Tests and Assessments - Upper body strength testing protocols</li>
+                        <li><strong>NASM:</strong> Chapter 6 - Movement Assessments, Pulling Assessment</li>
+                        <li><strong>Military Standards:</strong> Marine Corps Physical Fitness Test Standards</li>
+                    </ul>
+                    
+                    <h3>Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://www.nsca.com/contentassets/116c55d64e1343d2b264e05aaf158a91/basics_of_strength_and_conditioning_manual.pdf" target="_blank">NSCA Basics of Strength and Conditioning Manual</a></li>
+                        <li><a href="https://exrx.net/Testing/WeightLifting/PullupStandards" target="_blank">ExRx.net Pull-up Strength Standards</a></li>
+                        <li><a href="https://www.fitness.marines.mil/pft-cft_standards/" target="_blank">Marine Corps Fitness Standards</a></li>
                     </ul>
                 `,
-                'squat': `
-                    <h3>About the Squat Assessment</h3>
-                    <p>The bodyweight squat test evaluates lower body strength, endurance, and mobility of the hips, knees, and ankles.</p>
+                'inverted-row': `
+                    <h3>About the Inverted Row Test</h3>
+                    <p>The inverted row test is an excellent alternative to pull-ups that measures upper body pulling strength using body weight resistance. It's highly scalable and accessible for all fitness levels.</p>
                     
                     <h3>Test Protocol</h3>
                     <ul>
-                        <li>Duration: 60 seconds (maximum repetitions)</li>
-                        <li>Feet shoulder-width apart</li>
-                        <li>Full ROM: Hips below parallel, return to standing</li>
-                        <li>Arms can be extended forward for balance</li>
+                        <li>Equipment: Barbell in rack, suspension trainer, or sturdy bar at waist height</li>
+                        <li>Duration: 60 seconds maximum repetitions</li>
+                        <li>Grip: Overhand, shoulder-width apart</li>
+                        <li>Full ROM: Chest to bar, arms fully extended at bottom</li>
+                        <li>Body remains rigid throughout movement</li>
+                    </ul>
+                    
+                    <h3>Body Position Variations</h3>
+                    <ul>
+                        <li><strong>Feet Elevated:</strong> Most difficult, similar to standard pull-ups</li>
+                        <li><strong>Feet on Ground:</strong> Intermediate difficulty</li>
+                        <li><strong>Knees Bent:</strong> Beginner-friendly modification</li>
                     </ul>
                     
                     <h3>Scoring Guidelines</h3>
                     <table class="modal-table">
                         <tr>
                             <th>Score</th>
-                            <th>Repetitions</th>
+                            <th>Reps (Feet Elevated)</th>
                             <th>Performance Level</th>
                         </tr>
                         <tr>
                             <td>10</td>
-                            <td>&gt;60</td>
+                            <td>&gt;50</td>
                             <td>Elite</td>
                         </tr>
                         <tr>
                             <td>8-9</td>
-                            <td>50-59</td>
+                            <td>40-49</td>
                             <td>Excellent</td>
                         </tr>
                         <tr>
                             <td>6-7</td>
-                            <td>40-49</td>
+                            <td>30-39</td>
                             <td>Good</td>
                         </tr>
                         <tr>
                             <td>4-5</td>
-                            <td>30-39</td>
+                            <td>20-29</td>
                             <td>Average</td>
                         </tr>
                         <tr>
                             <td>1-3</td>
-                            <td>&lt;30</td>
+                            <td>&lt;20</td>
                             <td>Below Average</td>
                         </tr>
                     </table>
+                    <p><em>Note: Reduce score by 2 points for feet on ground, 3 points for knees bent</em></p>
                     
-                    <h3>Mobility Considerations</h3>
-                    <p>Limited ankle or hip mobility may affect squat depth. Note any compensations or limitations observed.</p>
+                    <h3>Benefits & Progressions</h3>
+                    <p>Inverted rows develop the same muscle groups as pull-ups while allowing for easier progression. Research shows high correlation between inverted row and pull-up performance.</p>
                     
-                    <h3>Sources</h3>
+                    <h3>Certification Sources & References</h3>
                     <ul>
-                        <li>NASM Movement Assessment Guidelines</li>
-                        <li>FMS (Functional Movement Screen) Standards</li>
-                        <li>ACSM Exercise Testing Guidelines</li>
+                        <li><strong>NSCA:</strong> Alternative pulling assessments for varied populations</li>
+                        <li><strong>ACE:</strong> Bodyweight training progressions</li>
+                        <li><strong>NASM:</strong> Regression exercises for pulling movements</li>
                     </ul>
                 `,
-                'hinge': `
-                    <h3>About the Hinge Assessment</h3>
-                    <p>The hip hinge assessment evaluates posterior chain flexibility, particularly hamstring mobility and lower back health.</p>
-                    
-                    <h3>Test Components</h3>
-                    <ul>
-                        <li><strong>Toe Touch Test:</strong> Standing forward bend flexibility</li>
-                        <li><strong>Hip Hinge Pattern:</strong> Ability to hinge at hips without excessive spinal flexion</li>
-                        <li><strong>Lower Back Assessment:</strong> Checking for excessive rounding</li>
-                    </ul>
-                    
-                    <h3>Scoring Criteria</h3>
-                    <ul>
-                        <li><strong>10:</strong> Palms flat on floor, perfect hip hinge</li>
-                        <li><strong>8-9:</strong> Fingertips to floor easily</li>
-                        <li><strong>6-7:</strong> Fingertips reach ankles</li>
-                        <li><strong>4-5:</strong> Fingertips reach mid-shin</li>
-                        <li><strong>1-3:</strong> Limited flexibility, cannot reach shins</li>
-                    </ul>
-                    
-                    <h3>Clinical Significance</h3>
-                    <p>Poor hip hinge patterns are associated with increased risk of lower back injury. This assessment helps identify mobility restrictions and movement quality issues.</p>
-                    
-                    <h3>Sources</h3>
-                    <ul>
-                        <li>Stuart McGill - Back Mechanic</li>
-                        <li>FMS Movement Patterns</li>
-                        <li>NASM Corrective Exercise Specialist Manual</li>
-                    </ul>
-                `,
-                'balance': `
-                    <h3>About the Balance Assessment</h3>
-                    <p>The single-leg stand test evaluates proprioception, stability, and neuromuscular control.</p>
+                'dead-hang': `
+                    <h3>About the Dead Hang Test</h3>
+                    <p>The dead hang test measures grip strength, shoulder stability, and muscular endurance. It's an excellent predictor of overall upper body strength and is used in rock climbing and tactical fitness assessments.</p>
                     
                     <h3>Test Protocol</h3>
                     <ul>
-                        <li>Stand on one leg with eyes open (30 seconds)</li>
-                        <li>Stand on one leg with eyes closed (30 seconds)</li>
-                        <li>Test both legs</li>
-                        <li>Arms can be crossed over chest or at sides</li>
+                        <li>Equipment: Pull-up bar or any sturdy overhead bar</li>
+                        <li>Starting position: Arms fully extended, shoulders engaged</li>
+                        <li>Measurement: Maximum time maintaining grip</li>
+                        <li>Body should remain still (minimal swaying)</li>
+                        <li>Test ends when grip fails or feet touch ground</li>
                     </ul>
                     
-                    <h3>Scoring Guidelines</h3>
+                    <h3>Grip Variations</h3>
+                    <ul>
+                        <li><strong>Overhand (Pronated):</strong> Most challenging, standard grip</li>
+                        <li><strong>Neutral:</strong> Easier grip, allows 15-20% longer hang times</li>
+                    </ul>
+                    
+                    <h3>Scoring Guidelines (Overhand Grip)</h3>
                     <table class="modal-table">
                         <tr>
                             <th>Score</th>
-                            <th>Performance</th>
-                            <th>Balance Level</th>
+                            <th>Hang Time</th>
+                            <th>Grip Strength Level</th>
                         </tr>
                         <tr>
                             <td>10</td>
-                            <td>30s eyes closed, no wobble</td>
+                            <td>≥90 seconds</td>
                             <td>Elite</td>
                         </tr>
                         <tr>
                             <td>8-9</td>
-                            <td>20-29s eyes closed</td>
+                            <td>75-89 seconds</td>
                             <td>Excellent</td>
                         </tr>
                         <tr>
                             <td>6-7</td>
-                            <td>10-19s eyes closed</td>
+                            <td>60-74 seconds</td>
                             <td>Good</td>
                         </tr>
                         <tr>
-                            <td>4-5</td>
-                            <td>&lt;10s eyes closed, 30s eyes open</td>
+                            <td>5</td>
+                            <td>45-59 seconds</td>
+                            <td>Above Average</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>30-44 seconds</td>
                             <td>Average</td>
                         </tr>
                         <tr>
-                            <td>1-3</td>
-                            <td>Difficulty with eyes open</td>
-                            <td>Needs Improvement</td>
+                            <td>3</td>
+                            <td>20-29 seconds</td>
+                            <td>Below Average</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>10-19 seconds</td>
+                            <td>Poor</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>&lt;10 seconds</td>
+                            <td>Very Poor</td>
                         </tr>
                     </table>
+                    <p><em>Note: Neutral grip reduces score by 2 points</em></p>
                     
-                    <h3>Age Considerations</h3>
-                    <p>Balance naturally declines with age. Norms vary by age group, with expectations adjusted accordingly.</p>
+                    <h3>Clinical Significance</h3>
+                    <p>Grip strength is highly correlated with overall health and longevity. Poor grip strength is associated with increased mortality risk and functional decline.</p>
                     
-                    <h3>Sources</h3>
+                    <h3>Certification Sources & References</h3>
                     <ul>
-                        <li>Berg Balance Scale Research</li>
-                        <li>CDC Balance Assessment Guidelines</li>
-                        <li>Journal of Aging and Physical Activity</li>
+                        <li><strong>Research:</strong> "Grip Strength as a Predictor of Overall Strength" - Journal of Strength & Conditioning Research</li>
+                        <li><strong>NSCA:</strong> Grip strength testing protocols</li>
+                        <li><strong>Climbing Standards:</strong> International Rock Climbing Research Association</li>
+                        <li><strong>Tactical Fitness:</strong> Military and law enforcement grip standards</li>
                     </ul>
                 `
             };
             
-            return content[section] || '<p>Information not available for this section.</p>';
+            return pullContent[testType] || pullContent['pullup'];
         }
     </script>
     
